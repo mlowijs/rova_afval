@@ -4,7 +4,6 @@ from datetime import date
 ROVA_API_URL = 'http://rova.quintor.nl/rest/afvalkalender/{0}/{1}/{2}/{3}?toevoeging={4}'
 
 def get_inzamelingen(year, postcode, house_number, suffix = None):
-
     postcode = str(postcode).strip()
     postcode_letters = postcode[0:4]
     postcode_numbers = postcode[4:].strip()
@@ -21,6 +20,6 @@ def get_inzamelingen(year, postcode, house_number, suffix = None):
     response = requests.get(request_url).json()
 
     if 'result' in response and response['result'] == 'failed':
-        return False
+        return { 'error': True, 'message': response['description'] }
 
-    return response['afvalkalender']['inzameldagen']
+    return { 'error': False, 'data': response['afvalkalender']['inzameldagen'] }
